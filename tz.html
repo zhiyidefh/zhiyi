@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>请在浏览器中打开</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义样式 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#07C160', // 绿色主色调，符合微信生态视觉
+            secondary: '#FF6B6B', // 辅助色，用于强调按钮
+            neutral: {
+              100: '#F5F5F5',
+              200: '#E5E5E5',
+              300: '#D4D4D4',
+              800: '#1F2937',
+              900: '#111827',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .btn-pulse {
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-b from-neutral-100 to-white min-h-screen flex flex-col items-center justify-center p-4 text-neutral-800 font-sans">
+  <!-- 页面容器 -->
+  <div class="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden fade-in">
+    <!-- 顶部图标区域 -->
+    <div class="bg-primary p-6 text-center">
+      <i class="fa fa-external-link text-5xl text-white mb-2"></i>
+      <h1 class="text-2xl font-bold text-white text-shadow">请在浏览器中打开</h1>
+    </div>
+    
+    <!-- 内容区域 -->
+    <div class="p-6">
+      <!-- 设备检测结果显示区域 -->
+      <div id="device-info" class="mb-6 text-center">
+        <p class="text-lg font-medium mb-1">正在检测您的设备...</p>
+        <p class="text-neutral-500 text-sm">请稍候...</p>
+      </div>
+      
+      <!-- 安卓设备引导区域 -->
+      <div id="android-guide" class="hidden fade-in">
+        <div class="bg-neutral-100 rounded-xl p-5 mb-6">
+          <div class="flex items-start mb-4">
+            <i class="fa fa-android text-primary text-2xl mt-1 mr-3"></i>
+            <h2 class="text-xl font-bold">安卓设备</h2>
+          </div>
+          <p class="text-neutral-700 mb-4">由于微信限制，需要在浏览器中打开此页面以获得最佳体验。</p>
+          
+          <div class="space-y-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center mr-3 text-neutral-600">1</div>
+              <p>点击右上角「...</p>
+            </div>
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center mr-3 text-neutral-600">2</div>
+              <p>选择「在浏览器中打开」</p>
+            </div>
+          </div>
+        </div>
+        
+        <a href="#" id="android-btn" class="block w-full bg-secondary hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl text-center transition-all duration-300 transform hover:scale-105 btn-pulse">
+          立即前往浏览器
+        </a>
+      </div>
+      
+      <!-- 苹果设备引导区域 -->
+      <div id="ios-guide" class="hidden fade-in">
+        <div class="bg-neutral-100 rounded-xl p-5 mb-6">
+          <div class="flex items-start mb-4">
+            <i class="fa fa-apple text-primary text-2xl mt-1 mr-3"></i>
+            <h2 class="text-xl font-bold">苹果设备</h2>
+          </div>
+          <p class="text-neutral-700 mb-4">由于微信限制，需要在浏览器中打开此页面以获得最佳体验。</p>
+          
+          <div class="space-y-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center mr-3 text-neutral-600">1</div>
+              <p>点击屏幕底部的「分享」按钮</p>
+            </div>
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center mr-3 text-neutral-600">2</div>
+              <p>选择「在Safari中打开」</p>
+            </div>
+          </div>
+        </div>
+        
+        <a href="#" id="ios-btn" class="block w-full bg-secondary hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl text-center transition-all duration-300 transform hover:scale-105 btn-pulse">
+          立即前往浏览器
+        </a>
+      </div>
+      
+      <!-- 非微信环境提示 -->
+      <div id="non-wechat" class="hidden fade-in text-center">
+        <i class="fa fa-check-circle text-primary text-3xl mb-3"></i>
+        <h2 class="text-xl font-bold mb-2">您已在浏览器中</h2>
+        <p class="text-neutral-600 mb-4">此页面已在浏览器中打开，可正常使用所有功能。</p>
+        <a href="#" class="inline-block bg-primary hover:bg-green-700 text-white font-medium py-2 px-6 rounded-full transition-all duration-300">
+          继续浏览
+        </a>
+      </div>
+    </div>
+    
+    <!-- 底部版权信息 -->
+    <div class="bg-neutral-100 text-center p-4 text-neutral-500 text-sm">
+      <p>© 2025 版权所有</p>
+    </div>
+  </div>
+  
+  <!-- 遮罩层和提示框 -->
+  <div id="mask" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl fade-in">
+      <h3 class="text-xl font-bold text-center mb-4">操作提示</h3>
+      <p id="mask-message" class="text-neutral-700 mb-6 text-center"></p>
+      <div class="flex justify-center">
+        <button id="close-mask" class="bg-primary hover:bg-green-700 text-white font-medium py-2 px-8 rounded-full transition-all duration-300">
+          我知道了
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 设备检测函数
+    function detectDevice() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isWeChat = userAgent.includes('micromessenger');
+      const isAndroid = userAgent.includes('android');
+      const isIOS = /iphone|ipad|ipod/.test(userAgent);
+      
+      const deviceInfoEl = document.getElementById('device-info');
+      const androidGuideEl = document.getElementById('android-guide');
+      const iosGuideEl = document.getElementById('ios-guide');
+      const nonWechatEl = document.getElementById('non-wechat');
+      
+      // 隐藏所有区域
+      deviceInfoEl.classList.add('hidden');
+      androidGuideEl.classList.add('hidden');
+      iosGuideEl.classList.add('hidden');
+      nonWechatEl.classList.add('hidden');
+      
+      if (!isWeChat) {
+        // 不在微信中打开，直接显示正常浏览提示
+        nonWechatEl.classList.remove('hidden');
+        return;
+      }
+      
+      if (isAndroid) {
+        // 安卓设备
+        androidGuideEl.classList.remove('hidden');
+        
+        // 安卓按钮点击事件
+        document.getElementById('android-btn').addEventListener('click', function(e) {
+          e.preventDefault();
+          showMask('请按照上方指引，在浏览器中打开此页面');
+        });
+      } else if (isIOS) {
+        // 苹果设备
+        iosGuideEl.classList.remove('hidden');
+        
+        // 苹果按钮点击事件
+        document.getElementById('ios-btn').addEventListener('click', function(e) {
+          e.preventDefault();
+          showMask('请按照上方指引，在Safari中打开此页面');
+        });
+      } else {
+        // 未知设备
+        deviceInfoEl.innerHTML = `
+          <p class="text-lg font-medium mb-1">检测到未知设备</p>
+          <p class="text-neutral-500 text-sm">请手动在浏览器中打开此页面</p>
+        `;
+        deviceInfoEl.classList.remove('hidden');
+      }
+    }
+    
+    // 显示遮罩层提示
+    function showMask(message) {
+      const mask = document.getElementById('mask');
+      const maskMessage = document.getElementById('mask-message');
+      
+      maskMessage.textContent = message;
+      mask.classList.remove('hidden');
+      
+      // 关闭遮罩层
+      document.getElementById('close-mask').addEventListener('click', function() {
+        mask.classList.add('hidden');
+      });
+    }
+    
+    // 页面加载完成后执行设备检测
+    document.addEventListener('DOMContentLoaded', function() {
+      detectDevice();
+      
+      // 模拟设备检测加载效果
+      setTimeout(detectDevice, 1000);
+    });
+  </script>
+</body>
+</html>
